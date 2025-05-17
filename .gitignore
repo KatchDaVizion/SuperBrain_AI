@@ -3,3 +3,4 @@ memory/
 *.env
 memory.key
 __pycache__/
+security/face_recognition_models
