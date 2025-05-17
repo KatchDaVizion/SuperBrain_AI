@@ -1,64 +1,67 @@
-# SuperBrain AI Platform
+# SuperBrain AI Platform – Gemini Assistant
 # Created by David Louis-Charles (GitHub: KatchDaVizion)
 # © 2025 All Rights Reserved — https://github.com/KatchDaVizion
 
-# gemini_assistant.py
 import os
+import subprocess
 import json
-import time
-from datetime import datetime
-from utils.memory_manager import save_entry
-from utils.config import load_key, save_key
-from utils.logger import log_info, log_error
-import requests
+from datetime import datetime, timezone
+import google.generativeai as genai
+from memory_encryption import encrypt_text
 
+MEMORY_FILE = "../memory/memory_db.json"
 SOURCE = "Gemini"
-API_KEY_FILE = "gemini_api_key.txt"
-API_KEY_HINT = "Get yours from https://makersuite.google.com/app/apikey"
-GEMINI_API_CHECK = {
-    'url': "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro",
-    'method': 'get',
-    'params': {"key": load_key(API_KEY_FILE, API_KEY_HINT)} # Key as a parameter
-}
 
-def ask_gemini(prompt):
+def ensure_latest_gemini():
     try:
-        api_key = load_key(API_KEY_FILE, API_KEY_HINT, GEMINI_API_CHECK)
-        if not api_key:
-            return "[⚠️] Gemini API key not provided."
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
-        headers = {"Content-Type": "application/json"}
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-        response = requests.post(url, headers=headers, json=payload)
-        response.raise_for_status()
-        log_info("Gemini response received.", module="gemini_assistant")
-        return response.json()["candidates"][0]["content"]["parts"][0]["text"]
-    except requests.exceptions.RequestException as e:
-        log_error(f"Gemini API error: {e}", module="gemini_assistant")
-        try:
-            error_data = response.json()
-            return f"[❌] Gemini API error: {error_data.get('error', {}).get('message', str(e))}"
-        except:
-            return f"[❌] Gemini API error: {e}"
+        print("[🔄] Checking for Gemini SDK updates...")
+        subprocess.run(["pip", "install", "--upgrade", "google-generativeai"], check=True)
+        import google.generativeai as genai
+        print(f"[ℹ️] Gemini SDK version: {genai.__version__}")
+    except Exception as e:
+        print(f"[!] Failed to update Gemini SDK: {e}")
 
-def chat():
-    print(f"\n🤖 [Gemini Assistant] — Type 'exit' to quit.")
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() in ["exit", "quit"]:
-            break
-        answer = ask_gemini(user_input)
-        if answer:
-            print("Assistant:", answer)
-            save_entry(SOURCE, user_input, answer)
+ensure_latest_gemini()
 
-if __name__ == "__main__":
-    log_info("Gemini Assistant started.", module="gemini_assistant")
-    chat()
+if not os.getenv("GEMINI_API_KEY"):
+    print("[🔐] Missing Gemini API Key. Get yours at https://makersuite.google.com/app/apikey")
+    os.environ["GEMINI_API_KEY"] = input("Paste Gemini API Key: ")
 
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+model_name = os.getenv("GEMINI_MODEL") or input("[🧠] Enter Gemini model (default = gemini-pro): ") or "gemini-pro"
+model = genai.GenerativeModel(model_name)
+
+def save_to_memory(prompt, answer):
+    os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
+    memory = []
+    if os.path.exists(MEMORY_FILE):
+        with open(MEMORY_FILE, "r") as f:
+            memory = json.load(f)
+
+    memory.append({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "source": SOURCE,
+        "prompt": encrypt_text(prompt),
+        "response": encrypt_text(answer)
+    })
+
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(memory, f, indent=2)
+
+print("\n🤖 [Gemini Assistant] — Type 'exit' to quit.\n")
+
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ("exit", "quit"):
+        break
+    try:
+        response = model.generate_content(user_input)
+        print("Gemini:", response.text)
+        save_to_memory(user_input, response.text)
+    except Exception as e:
+        print(f"[!] Error: {e}")
 
 __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 
 def check_license():
-    allowed_user = "David Louis-Charles"
-    return allowed_user in __author_id__
+    return "David Louis-Charles" in __author_id__

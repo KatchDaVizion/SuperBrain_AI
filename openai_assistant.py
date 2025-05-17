@@ -4,19 +4,34 @@
 
 import os
 import json
-import time
-import openai
-from datetime import datetime
+import subprocess
+from datetime import datetime, timezone
+from openai import OpenAI
+from memory_encryption import encrypt_text
 
 MEMORY_FILE = "../memory/memory_db.json"
 SOURCE = "OpenAI"
 
-# Prompt for API Key if missing
+def ensure_latest_openai():
+    try:
+        print("[🔄] Checking for OpenAI SDK updates...")
+        subprocess.run(["pip", "install", "--upgrade", "openai"], check=True)
+        import openai
+        print(f"[ℹ️] OpenAI SDK version: {openai.__version__}")
+    except subprocess.CalledProcessError as e:
+        print(f"[❌] Failed to update OpenAI SDK: {e}")
+
+ensure_latest_openai()
+
 if not os.getenv("OPENAI_API_KEY"):
     print("[🔐] Missing OpenAI API Key. Get yours at https://platform.openai.com/account/api-keys")
     os.environ["OPENAI_API_KEY"] = input("Paste OpenAI API Key: ")
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+model = os.getenv("OPENAI_MODEL")
+if not model:
+    model = input("[🧠] Enter OpenAI model (default = gpt-3.5-turbo): ") or "gpt-3.5-turbo"
 
 def save_to_memory(prompt, answer):
     os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
@@ -26,10 +41,10 @@ def save_to_memory(prompt, answer):
             memory = json.load(f)
 
     memory.append({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "source": SOURCE,
-        "prompt": prompt,
-        "response": answer
+        "prompt": encrypt_text(prompt),
+        "response": encrypt_text(answer)
     })
 
     with open(MEMORY_FILE, "w") as f:
@@ -37,11 +52,11 @@ def save_to_memory(prompt, answer):
 
 def ask_openai(prompt):
     try:
-        completion = openai.ChatCompletion.create(
-            model="gpt-4",
+        response = client.chat.completions.create(
+            model=model,
             messages=[{"role": "user", "content": prompt}]
         )
-        return completion.choices[0].message["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return f"[!] Error: {e}"
 
@@ -58,9 +73,7 @@ def chat():
 if __name__ == "__main__":
     chat()
 
-
 __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 
 def check_license():
-    allowed_user = "David Louis-Charles"
-    return allowed_user in __author_id__
+    return "David Louis-Charles" in __author_id__

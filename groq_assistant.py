@@ -1,70 +1,70 @@
-# SuperBrain AI Platform
+# SuperBrain AI Platform – Groq Assistant
 # Created by David Louis-Charles (GitHub: KatchDaVizion)
 # © 2025 All Rights Reserved — https://github.com/KatchDaVizion
 
-# groq_assistant.py
 import os
+import subprocess
 import json
-import time
-from datetime import datetime
-import requests
-from utils.memory_manager import save_entry
-from utils.config import load_key
-from utils.logger import log_info, log_error
+from datetime import datetime, timezone
+from groq import Groq
+from memory_encryption import encrypt_text
 
+MEMORY_FILE = "../memory/memory_db.json"
 SOURCE = "Groq"
-API_KEY_FILE = "groq_api_key.txt"
-API_KEY_HINT = "Visit https://console.groq.com to get your API key."
-GROQ_API_CHECK = {
-    'url': "https://api.groq.com/openai/v1/models",
-    'method': 'get',
-    'headers': {"Authorization": f"Bearer {load_key(API_KEY_FILE, API_KEY_HINT)}"} # Initial load for header
-}
 
-def ask_groq(prompt):
-    api_key = load_key(API_KEY_FILE, API_KEY_HINT, GROQ_API_CHECK)
-    if not api_key:
-        return "[⚠️] Groq API key not provided."
+def ensure_latest_groq():
     try:
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "messages": [{"role": "user", "content": prompt}],
-            "model": "mixtral-8x7b-32768",
-            "temperature": 0.7
-        }
-        response = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-        response.raise_for_status()
-        log_info("Groq response received.", module="groq_assistant")
-        return response.json()["choices"][0]["message"]["content"]
-    except requests.exceptions.RequestException as e:
-        log_error(f"Groq API error: {e}", module="groq_assistant")
-        try:
-            error_data = response.json()
-            return f"[❌] Groq API error: {error_data.get('error', {}).get('message', str(e))}"
-        except:
-            return f"[❌] Groq API error: {e}"
+        print("[🔄] Checking for Groq SDK updates...")
+        subprocess.run(["pip", "install", "--upgrade", "groq"], check=True)
+        import groq
+        print(f"[ℹ️] Groq SDK version: {groq.__version__}")
+    except Exception as e:
+        print(f"[!] Failed to update Groq SDK: {e}")
 
-def chat():
-    print(f"\n🤖 [Groq Assistant] — Type 'exit' to quit.")
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() in ["exit", "quit"]:
-            break
-        answer = ask_groq(user_input)
-        if answer:
-            print("Assistant:", answer)
-            save_entry(SOURCE, user_input, answer)
+ensure_latest_groq()
 
-if __name__ == "__main__":
-    log_info("Groq Assistant started.", module="groq_assistant")
-    chat()
+if not os.getenv("GROQ_API_KEY"):
+    print("[🔐] Missing Groq API Key. Get yours at https://console.groq.com/api-keys")
+    os.environ["GROQ_API_KEY"] = input("Paste Groq API Key: ")
 
+client = Groq(api_key=os.environ["GROQ_API_KEY"])
+model = os.getenv("GROQ_MODEL") or input("[🧠] Enter Groq model (default = mixtral-8x7b-32768): ") or "mixtral-8x7b-32768"
+
+def save_to_memory(prompt, answer):
+    os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
+    memory = []
+    if os.path.exists(MEMORY_FILE):
+        with open(MEMORY_FILE, "r") as f:
+            memory = json.load(f)
+
+    memory.append({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "source": SOURCE,
+        "prompt": encrypt_text(prompt),
+        "response": encrypt_text(answer)
+    })
+
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(memory, f, indent=2)
+
+print("\n🤖 [Groq Assistant] — Type 'exit' to quit.\n")
+
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ("exit", "quit"):
+        break
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": user_input}]
+        )
+        reply = response.choices[0].message.content
+        print("Groq:", reply)
+        save_to_memory(user_input, reply)
+    except Exception as e:
+        print(f"[!] Error: {e}")
 
 __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 
 def check_license():
-    allowed_user = "David Louis-Charles"
-    return allowed_user in __author_id__
+    return "David Louis-Charles" in __author_id__
