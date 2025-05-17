@@ -1,66 +1,118 @@
-# 🧠 Platform_SuperBrain — Portable AI Intelligence Framework
+# 🧠 SuperBrain AI – Offline AI Research Platform (V1)
 
-## Features
-- Query multiple AIs: OpenAI, Claude, Gemini, Groq, Local LLMs
-- Face recognition (batch + single match)
-- TOR + Web scraper agents
-- Text/document ingestion for memory
-- Memory visualizer, deduplicator, and summarizer
-- Self-updater
-- Plugin system for modular AI tools
+> Modular, encrypted, and assistant-powered intelligence OS – built for OSINT, cybersecurity, and privacy-first research.
 
-## Setup
+---
 
-1. Run the launcher:
-```bash
+## 🚀 What Is It?
+
+**SuperBrain AI** is your plug-and-play, offline-capable AI assistant ecosystem.  
+It runs fully on your machine, supports multiple local and API-based LLMs, and helps you search, analyze, and remember — without exposing your data to the cloud.
+
+---
+
+## ✅ Features
+
+- 🔌 **Multi-AI Assistant Hub**  
+  GPT-4, Claude, Gemini, Groq, TinyLLaMA, LLaMA2, Mistral (via Ollama)
+
+- 🧠 **Memory System + RAG**  
+  All prompts and answers saved, with semantic recall and feedback
+
+- 🕵️ **Dark Web & Surface Web Scraper**  
+  Scrapes `.onion` and surface URLs via TOR and DuckDuckGo
+
+- 📚 **Document & PDF Ingestion**  
+  Feed reports, text files, or notes directly into the AI’s memory
+
+- 🧑‍💻 **Face Recognition Agent**  
+  Compare webcam input to known image sets – all offline
+
+- 🔐 **Encrypted Memory Mode** (Optional)  
+  Choose to store memory encrypted with a passphrase
+
+- 📦 **Modular Plugins Folder**  
+  Drop in your own Python AI tools
+
+- 💽 **USB Portable Deployment**  
+  Launch from any Linux machine – great for OPSEC or travel
+
+- 🔄 **Versioned & Self-Updating**  
+  `version.txt`, auto-updater, and Git integration
+
+---
+
+## 💻 Installation
+
+### 🐧 On Linux / WSL / Kali / Ubuntu:
+
+chmod +x launch_ai_portable.sh
 ./launch_ai_portable.sh
 
+🍏 On macOS:
 
-🔒 API Keys
-OpenAI: https://platform.openai.com/account/api-keys
+chmod +x launch_macOS.sh
+./launch_macOS.sh
+The launcher will:
 
-Claude: https://console.anthropic.com
+Create a virtual environment
 
-Gemini: https://makersuite.google.com/app/apikey
+Install dependencies
 
-Groq: https://console.groq.com
---------------------------------------------
+Start Ollama and Tor
 
-Explanation of Each Menu Option
-Option	Description
-1. OpenAI Assistant	Connects to GPT-4 or GPT-3.5 via your OpenAI API. Uses it for powerful online reasoning.
-2. Claude Assistant	Uses Anthropic’s Claude model via API. Good for summarization, long documents, and safe responses.
-3. Gemini Assistant	Uses Google’s Gemini 1.5 API. Often better at reasoning or creative tasks.
-4. Groq Assistant	Uses Groq’s LLMs (like Mixtral). Extremely fast inference from cloud API.
-5. Local LLM Assistant (Ollama)	Uses models like TinyLlama, Phi-3, Gemma-2B, LLaMA-2 loaded locally on your system. Runs even offline.
-6. Multi-Model Assistant	Queries all the online APIs and local LLMs in parallel, compares results, and saves all responses to memory.
-7. Face Recognition Agent	Uses OpenCV and face_recognition to compare known and unknown face images and logs results.
-8. Dark Web Scraper	Connects to .onion websites using Tor and scrapes content for keywords or patterns.
-9. Manual Document/Text Ingestion	You can paste in raw text or load files (PDF, DOCX, TXT) to train the local memory module.
-10. Quit	Exits the script.
+Prompt you to pick your assistant
 
-------------------------------------------------------
+🛡 Memory Encryption (Optional)
+On first run, choose:
 
-Example: Add facts from a file
-You can add a command like this in a script (ingest_knowledge.py):
+pgsql
+1. Enable memory encryption
+2. Leave memory unencrypted
+If enabled, memory is encrypted using AES and a passphrase-based key.
 
+View later with:
 
-save_entry(source=source, content=text, timestamp=timestamp)
-print(f"[+] Knowledge added to memory.")
-✅ Usage:
-bash
+python3 utils/decrypt_memory.py
+🧠 Assistant Menu (from launcher)
+Option	Assistant	Function
+1	OpenAI Assistant	GPT-4 (API)
+2	Claude Assistant	Claude 3 (API)
+3	Gemini Assistant	Gemini Pro (API)
+4	Groq Assistant	Groq Mixtral (API)
+5a	TinyLLaMA (local)	Ollama model
+5b	LLaMA2 (local)	Ollama model
+5c	Mistral (local)	Ollama model
+6	Multi-AI Battle Mode	Ask all at once
+7	Face Recognition Agent	Offline image matching
+8	Dark Web Scraper	Surface + .onion
+9	Ingest Document / Text	Feed AI memory manually
+10	Quit	Exit safely
 
-python ingest_knowledge.py "The CIA World Factbook says Iran has over 86 million people as of 2024."
-That text is now embedded and searchable in the assistant’s memory.
+🔄 Update
 
--------------------------------------------------------
+python3 update_check.py
+./update_superbrain.sh
+🧬 Authors & License
 
-The face_recognition_agent.py script:
+SuperBrain AI Platform  
+Created by David Louis-Charles (GitHub: KatchDaVizion)  
+© 2025 All Rights Reserved – MIT Licensed
+Embedded authorship signature:
 
-Loads known faces (from images)
+__author_id__ = "KatchDaVizion_2025_DLC_SIG"
+def check_license():
+    return "David Louis-Charles" in __author_id__
+📦 Distribution
+GitHub Repo
 
-Scans and compares unknown images or webcam frames
+Gumroad (coming soon)
 
-Returns matches with names or "Unknown"
+USB boot image available upon request
 
-Optionally visualizes with OpenCV face boxes
+🙌 Support
+🛠 Issues welcome • 🤝 Contributions invited
+🔐 Designed for security researchers, OSINT analysts, and AI hackers
+💡 Questions? Hit me up at https://github.com/KatchDaVizion
+
+Built for privacy-first intelligence by David Louis-Charles
