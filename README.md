@@ -1,45 +1,74 @@
-# 🧠 SuperBrain AI – Offline AI Research Platform (V1)
+# 🧠 SuperBrain AI – Offline, Ethical, Research-Driven AI Platform (V1)
 
-> Modular, encrypted, and assistant-powered intelligence OS – built for OSINT, cybersecurity, and privacy-first research.
-
----
-
-## 🚀 What Is It?
-
-**SuperBrain AI** is your plug-and-play, offline-capable AI assistant ecosystem.  
-It runs fully on your machine, supports multiple local and API-based LLMs, and helps you search, analyze, and remember — without exposing your data to the cloud.
+> A local-first AI platform combining popular cloud models with uncensored local LLMs for empowered, responsible research.
 
 ---
 
-## ✅ Features
+## 🚀 What Is SuperBrain AI?
 
-- 🔌 **Multi-AI Assistant Hub**  
-  GPT-4, Claude, Gemini, Groq, TinyLLaMA, LLaMA2, Mistral (via Ollama)
+**SuperBrain AI** is a privacy-first, modular AI ecosystem designed to run fully **offline on your local machine**.
+It integrates powerful local LLMs (via **Ollama**) and connects to leading APIs like GPT-4, Claude, Gemini, and Groq — enabling you to:
 
-- 🧠 **Memory System + RAG**  
-  All prompts and answers saved, with semantic recall and feedback
+* ✅ Conduct advanced, unrestricted research
+* ✅ Maintain full control of your data
+* ✅ Grow your AI’s knowledge over time
 
-- 🕵️ **Dark Web & Surface Web Scraper**  
-  Scrapes `.onion` and surface URLs via TOR and DuckDuckGo
+SuperBrain is designed as a **personal intelligence platform**, empowering ethical researchers, analysts, and developers to explore freely while protecting privacy and respecting responsible use.
 
-- 📚 **Document & PDF Ingestion**  
-  Feed reports, text files, or notes directly into the AI’s memory
+---
 
-- 🧑‍💻 **Face Recognition Agent**  
-  Compare webcam input to known image sets – all offline
-This project uses pretrained models from [face_recognition_models](https://github.com/ageitgey/face_recognition_models) by Adam Geitgey, licensed under MIT.
+## 🔍 Why Local & Uncensored?
 
-- 🔐 **Encrypted Memory Mode** (Optional)  
-  Choose to store memory encrypted with a passphrase
+Most online AI tools are censored, rate-limited, and surveilled.
 
-- 📦 **Modular Plugins Folder**  
-  Drop in your own Python AI tools
+With SuperBrain:
 
-- 💽 **USB Portable Deployment**  
-  Launch from any Linux machine – great for OPSEC or travel
+* You run uncensored local models like **TinyLLaMA**, **LLaMA2-Uncensored**, and **Mistral**, enabling deep research, sensitive exploration, or intelligence work that cloud filters often block.
+* Everything runs locally — you **own your tools and your data**.
 
-- 🔄 **Versioned & Self-Updating**  
-  `version.txt`, auto-updater, and Git integration
+🛡️ SuperBrain is built for ethical use only. Misuse, abuse, or unethical application goes against the spirit of this platform.
+
+---
+
+## ✅ Core Features
+
+* 🔌 **Multi-AI Assistant Hub**
+
+  * GPT-4, Claude, Gemini, Groq (API)
+  * TinyLLaMA, LLaMA2, Mistral, Phi (local via Ollama)
+
+* 🧠 **Memory System + RAG Recall**
+
+  * All answers (from cloud or local) are saved and indexed
+  * Your local AI **learns over time** by recalling past answers
+
+* 🕵️ **Dark Web & Surface Web Scraper**
+
+  * TOR-enabled `.onion` + open web scraping
+
+* 📚 **Document Ingestion**
+
+  * Feed PDF, TXT, or DOCX files into memory
+
+* 🧑‍💻 **Facial Recognition Agent**
+
+  * Offline image matching using your own data set
+
+* 🔐 **Encrypted Memory Mode (Optional)**
+
+  * AES encryption with passphrase-based key
+
+* 🧹 **Plugin System**
+
+  * Drop in Python tools to extend the AI with your own features
+
+* 📍 **Portable & USB Bootable**
+
+  * Deploy SuperBrain from a flash drive with zero cloud setup
+
+* ↺ **Versioned, Self-Updating Architecture**
+
+  * Built-in `version.txt`, `update_check.py`, and updater script
 
 ---
 
@@ -50,70 +79,68 @@ This project uses pretrained models from [face_recognition_models](https://githu
 chmod +x launch_ai_portable.sh
 ./launch_ai_portable.sh
 
-🍏 On macOS:
+### 🍏 On macOS:
 
 chmod +x launch_macOS.sh
 ./launch_macOS.sh
-The launcher will:
 
-Create a virtual environment
+---
 
-Install dependencies
+## 🧠 How the AI Learns Over Time
 
-Start Ollama and Tor
+Every answer from GPT-4, Claude, Gemini, Groq, and your local models is:
 
-Prompt you to pick your assistant
+* Logged to memory with timestamp + source
+* Used in **semantic search (RAG)** to answer future prompts
+* Encrypted (if enabled) to protect your research
 
-🛡 Memory Encryption (Optional)
-On first run, choose:
+This means:
 
-pgsql
-1. Enable memory encryption
-2. Leave memory unencrypted
-If enabled, memory is encrypted using AES and a passphrase-based key.
+> The more you use SuperBrain, the **smarter and more personalized** your local AI becomes.
 
-View later with:
+---
 
-python3 utils/decrypt_memory.py
-🧠 Assistant Menu (from launcher)
-Option	Assistant	Function
-1	OpenAI Assistant	GPT-4 (API)
-2	Claude Assistant	Claude 3 (API)
-3	Gemini Assistant	Gemini Pro (API)
-4	Groq Assistant	Groq Mixtral (API)
-5a	TinyLLaMA (local)	Ollama model
-5b	LLaMA2 (local)	Ollama model
-5c	Mistral (local)	Ollama model
-6	Multi-AI Battle Mode	Ask all at once
-7	Face Recognition Agent	Offline image matching
-8	Dark Web Scraper	Surface + .onion
-9	Ingest Document / Text	Feed AI memory manually
-10	Quit	Exit safely
+## 🛡 Ethics Statement
 
-🔄 Update
+SuperBrain gives you powerful, unrestricted tools — and **you are responsible for how you use them**.
 
-python3 update_check.py
-./update_superbrain.sh
-🧬 Authors & License
+This project:
 
-SuperBrain AI Platform  
-Created by David Louis-Charles (GitHub: KatchDaVizion)  
-© 2025 All Rights Reserved – MIT Licensed
+* Encourages **truth-seeking, research, and innovation**
+* Does **not support disinformation, illegal, or unethical use**
+* Empowers responsible users to build, investigate, and understand
+
+---
+
+## 🦮 Authorship & License
+
+**SuperBrain AI Platform**
+Created by **David Louis-Charles** (GitHub: [KatchDaVizion](https://github.com/KatchDaVizion))
+© 2025 – All Rights Reserved – MIT Licensed
+
 Embedded authorship signature:
 
 __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 def check_license():
     return "David Louis-Charles" in __author_id__
-📦 Distribution
-GitHub Repo
 
-Gumroad (coming soon)
+Uses pretrained models from [face\_recognition\_models](https://github.com/ageitgey/face_recognition_models) by Adam Geitgey (MIT License).
 
-USB boot image available upon request
+---
 
-🙌 Support
+## 📦 Distribution
+
+* GitHub Repo: [github.com/KatchDaVizion/SuperBrain\_AI](https://github.com/KatchDaVizion/SuperBrain_AI)
+* Gumroad Pro Version (coming soon)
+* USB Boot Image (available upon request)
+
+---
+
+## 🙌 Community & Support
+
 🛠 Issues welcome • 🤝 Contributions invited
-🔐 Designed for security researchers, OSINT analysts, and AI hackers
-💡 Questions? Hit me up at https://github.com/KatchDaVizion
+💬 Feedback? Feature ideas? Bug reports? Let’s connect.
 
-Built for privacy-first intelligence by David Louis-Charles
+Built for privacy-first intelligence by **David Louis-Charles**
+**[https://github.com/KatchDaVizion](https://github.com/KatchDaVizion)**
+\#OpenSource #LocalAI #CyberSecurity #OSINT #AI #UncensoredLLM #PrivacyTech
