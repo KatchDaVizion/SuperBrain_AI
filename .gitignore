@@ -1,0 +1,39 @@
+# Memory & data
+memory_db.json
+memory/
+memory.key
+
+# Environment & secrets
+*.env
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+package-lock.json
+
+# Pro/private modules
+security/
+scrapers/darkweb_scraper.py
+scrapers/web_scraper.py
+utils/decrypt_memory.py
+utils/ingest_text.py
+utils/ingest_text_manual.py
+utils/set_memory_mode.py
+utils/sync_memory.py
+utils/memory_manager.py
+utils/memory.py
+utils/memory_db.json
+utils/__init__.py
+utils/config.py
+memory_encryption.py
+
+# Runtime
+ollama.pid
+resource_monitor.pid
+
+# Logs
+logs/
