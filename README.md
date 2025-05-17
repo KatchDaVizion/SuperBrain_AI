@@ -27,6 +27,7 @@ It runs fully on your machine, supports multiple local and API-based LLMs, and h
 
 - 🧑‍💻 **Face Recognition Agent**  
   Compare webcam input to known image sets – all offline
+This project uses pretrained models from [face_recognition_models](https://github.com/ageitgey/face_recognition_models) by Adam Geitgey, licensed under MIT.
 
 - 🔐 **Encrypted Memory Mode** (Optional)  
   Choose to store memory encrypted with a passphrase
