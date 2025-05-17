@@ -1,1 +1,5 @@
 memory_db.json
+memory/
+*.env
+memory.key
+__pycache__/
