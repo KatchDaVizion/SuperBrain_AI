@@ -1,8 +1,7 @@
 #!/bin/bash
-#SuperBrain AI Platform
-#Created by David Louis-Charles (GitHub: KatchDaVizion)
-#© 2025 All Rights Reserved — https://github.com/KatchDaVizion
-
+# SuperBrain AI Platform
+# Created by David Louis-Charles (GitHub: KatchDaVizion)
+# © 2025 All Rights Reserved — https://github.com/KatchDaVizion
 
 # ====================== CONFIG ======================
 PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -13,11 +12,13 @@ OS_TYPE=$(uname -s)
 IS_WSL=$(grep -i microsoft /proc/version 2>/dev/null)
 OLLAMA_PID_FILE="$PROJECT_ROOT/ollama.pid"
 RESOURCE_MONITOR_PID_FILE="$PROJECT_ROOT/resource_monitor.pid"
-VENV_DIR="$HOME/safe_venv" # Assuming you always use the home venv now
+VENV_DIR="$HOME/safe_venv"
 # ====================================================
 
 echo -e "\n🧠 [SuperBrain AI Portable Launcher]"
-python3 update_check.py
+$PYTHON_BIN update_check.py
+
+# --- OS Detection ---
 echo "[+] Detecting environment and preparing system..."
 OS_NAME=$(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"')
 echo "[🌐] Detected OS: $OS_NAME"
@@ -36,7 +37,7 @@ source "$VENV_DIR/bin/activate"
 echo "[+] Ensuring pip and setuptools are up to date..."
 pip install --upgrade pip setuptools --break-system-packages
 
-# macOS specific fallback for Tor and Python
+# macOS fallback
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     echo "[🍏] macOS detected. Using brew for Tor if needed."
     if ! command -v tor &>/dev/null; then
@@ -54,15 +55,23 @@ while IFS= read -r package; do
         echo "[📦] Installing: $package"
         pip install "$package" --break-system-packages
     fi
-done < "$REQUIREMENTS_FILE"
+    # Ensure old OpenAI fix
+    [[ "$package" == openai* ]] && pip install openai==0.28 --break-system-packages
 
+    # For face_recognition: ensure cmake and dlib
+    if [[ "$package" == face_recognition* ]]; then
+        sudo apt-get install -y cmake
+        pip install dlib --no-cache-dir --force-reinstall --break-system-packages || echo "[⚠️] dlib failed manually, skipping for now."
+    fi
+
+done < "$REQUIREMENTS_FILE"
 
 # ==================== START OLLAMA ===================
 start_ollama() {
     echo "[+] Starting Ollama in the background..."
     ollama serve > /dev/null 2>&1 &
     echo $! > "$OLLAMA_PID_FILE"
-    sleep 2 # Give Ollama a moment to start
+    sleep 2
 }
 
 stop_ollama() {
@@ -74,7 +83,6 @@ stop_ollama() {
     fi
 }
 
-# ============ START RESOURCE MONITOR (OPTIONAL) =======
 start_resource_monitor() {
     echo "[+] Starting resource monitor in the background..."
     python3 utils/resource_monitor.py &
@@ -90,7 +98,6 @@ stop_resource_monitor() {
     fi
 }
 
-
 # ==================== MAIN MENU =====================
 echo ""
 echo "🧠 Welcome to SuperBrain Launcher"
@@ -104,15 +111,13 @@ echo "    a) tinyllama"
 echo "    b) llama2"
 echo "    c) mistral"
 echo "    d) phi-3"
-echo "    ..." # Ajouter d'autres modèles que tu as téléchargés
 echo "6. Run Multi-Model Assistant"
 echo "7. Run Face Recognition Agent"
 echo "8. Run Dark Web Scraper"
 echo "9. Manual Document/Text Ingestion"
 echo "10. Quit"
-
-read -p "Choose an assistant [1-10] or local LLM [a-z]: " choice
 echo ""
+read -p "Choose an assistant [1-10] or local LLM [a-z]: " choice
 
 OLLAMA_RUNNING=false
 RESOURCE_MONITOR_RUNNING=false
@@ -134,18 +139,6 @@ case "$choice" in
     10) echo "[👋] Exiting. Stay sharp." && deactivate && exit 0 ;;
     *) echo "[❌] Invalid choice. Exiting." ;;
 esac
-
-# ============ CLEANUP PROMPT (OPTIONAL) ============
-echo ""
-DEACTIVATE_PROMPT=""
-
-if "$OLLAMA_RUNNING"; then
-    DEACTIVATE_PROMPT="$DEACTIVATE_PROMPT'Stop Ollama? (y/n): "
-fi
-
-if "$RESOURCE_MONITOR_RUNNING"; then
-    DEACTIVATE_PROMPT="$DEACTIVATE_PROMPT'Stop Resource Monitor? (y/n): "
-fi
 
 read -p "[🧹] Delete $VENV_DIR to save space? (y/n): " cleanup
 if [[ "$cleanup" =~ ^[Yy]$ ]]; then
