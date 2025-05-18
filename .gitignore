@@ -26,3 +26,4 @@ memory_encryption.py
 scrapers/darkweb_scraper.py
 scrapers/web_scraper.py
 security/
+__pycache__/
