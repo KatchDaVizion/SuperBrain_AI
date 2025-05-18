@@ -13,3 +13,16 @@ utils/sync_memory.py
 utils/memory_db.json
 __pycache__/
 memory_encryption.py
+utils/memory_manager.py
+utils/memory.py
+utils/logger.py
+utils/ingest_text_manual.py
+utils/decrypt_memory.py
+utils/ingest_text.py
+utils/set_memory_mode.py
+utils/sync_memory.py
+utils/memory_db.json
+memory_encryption.py
+scrapers/darkweb_scraper.py
+scrapers/web_scraper.py
+security/
