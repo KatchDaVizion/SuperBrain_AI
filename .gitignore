@@ -4,3 +4,11 @@ memory/
 memory.key
 __pycache__/
 security/face_recognition_models
+security/
+scrapers/darkweb_scraper.py
+utils/decrypt_memory.py
+utils/ingest_text.py
+utils/set_memory_mode.py
+utils/sync_memory.py
+utils/memory_db.json
+__pycache__/
