@@ -12,3 +12,4 @@ utils/set_memory_mode.py
 utils/sync_memory.py
 utils/memory_db.json
 __pycache__/
+memory_encryption.py
