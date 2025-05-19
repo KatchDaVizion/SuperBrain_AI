@@ -44,19 +44,19 @@ With SuperBrain:
 
 * 🕵️ **Dark Web & Surface Web Scraper**
 
-  * TOR-enabled `.onion` + open web scraping
+  * TOR-enabled `.onion` + open web scraping (Pro version only)
 
 * 📚 **Document Ingestion**
 
-  * Feed PDF, TXT, or DOCX files into memory
+  * Feed PDF, TXT, or DOCX files into memory (Pro only)
 
 * 🧑‍💻 **Facial Recognition Agent**
 
-  * Offline image matching using your own data set
+  * Offline image matching using your own data set (Pro only)
 
 * 🔐 **Encrypted Memory Mode (Optional)**
 
-  * AES encryption with passphrase-based key
+  * AES encryption with passphrase-based key (Pro only)
 
 * 🧹 **Plugin System**
 
@@ -72,31 +72,53 @@ With SuperBrain:
 
 ---
 
+## 📂 LLM Model Download & RAM Requirements
+
+SuperBrain lets you download and use **any Ollama-supported local LLM** directly on your machine.
+
+Just type `/download <model_name>` inside the Local LLM assistant (e.g., `/download phi3`).
+
+**Switch between models anytime** with `/model <number>`.
+
+**RAM usage examples**:
+
+| Model        | Approx RAM Needed |
+| ------------ | ----------------- |
+| TinyLLaMA    | 1.7 GB            |
+| Phi-3        | 3 GB              |
+| LLaMA2 7B    | 6–8 GB            |
+| Mistral 7B   | 10–12 GB          |
+| Mixtral 8x7B | 24+ GB            |
+
+🚨 Large models need significant system memory. Check your available RAM before switching.
+
+---
+
 ## 🔐 Secure Assistant Setup
 
 Each SuperBrain assistant (OpenAI, Claude, Gemini, Groq) supports **encrypted API key storage**:
 
-✅ No more retyping  
-✅ Reuses your saved key  
-✅ Detects invalid keys and prompts again  
-✅ Fully offline-safe
+📅 No more retyping
+🔐 Reuses your saved key
+🔔 Detects invalid keys and prompts again
+💪 Fully offline-safe
 
 ### How it works:
 
-- The first time you launch an assistant, you paste your API key.
-- It’s encrypted using your Linux/macOS username and stored in your home folder (e.g. `~/.openai_api.enc`).
-- If the key is ever invalid (expired or revoked), SuperBrain prompts you for a new one.
-- You can **manually clear all stored keys** using:
+* First-time use: paste your API key.
+* SuperBrain encrypts it using your Linux/macOS username and saves to `~/.api.enc`.
+* If a key fails, you’ll be prompted to re-enter it.
+* Wipe all saved keys with:
 
 python3 clear_keys.py
 
-🔐 Your keys are never shared, stored in plain text, or uploaded anywhere.
-Everything stays 100% local, protected with cryptography.Fernet.
+🔐 Your keys are never shared, stored in plain text, or uploaded. All data stays encrypted and local.
+
 ---
 
 ## 💻 Installation
 
-### 🐧 On Linux / WSL / Kali / Ubuntu:
+### 🐈 On Linux / WSL / Kali / Ubuntu:
 
 chmod +x launch_ai_portable.sh
 ./launch_ai_portable.sh
@@ -110,35 +132,34 @@ chmod +x launch_macOS.sh
 
 ## 🧠 How the AI Learns Over Time
 
-Every answer from GPT-4, Claude, Gemini, Groq, and your local models is:
+Each answer from GPT-4, Claude, Gemini, Groq, and local models is:
 
-* Logged to memory with timestamp + source
-* Used in **semantic search (RAG)** to answer future prompts
-* Encrypted (if enabled) to protect your research
+* Timestamped
+* Logged to memory
+* Reused in future queries through semantic search (RAG)
+* Optionally encrypted
 
-This means:
-
-> The more you use SuperBrain, the **smarter and more personalized** your local AI becomes.
+> The more you use SuperBrain, the smarter it becomes.
 
 ---
 
-## 🛡 Ethics Statement
+## 🛡️ Ethics Statement
 
-SuperBrain gives you powerful, unrestricted tools — and **you are responsible for how you use them**.
+SuperBrain gives you powerful, unrestricted tools — **you are responsible for how you use them.**
 
 This project:
 
-* Encourages **truth-seeking, research, and innovation**
-* Does **not support disinformation, illegal, or unethical use**
-* Empowers responsible users to build, investigate, and understand
+* Promotes ethical research, investigation, and innovation
+* Prohibits disinformation, illegal activity, and unethical use
+* Defends privacy and intelligence independence
 
 ---
 
-## 🦮 Authorship & License
+## 👮 Authorship & License
 
 **SuperBrain AI Platform**
-Created by **David Louis-Charles** (GitHub: [KatchDaVizion](https://github.com/KatchDaVizion))
-© 2025 – All Rights Reserved – MIT Licensed
+Created by **David Louis-Charles** ([KatchDaVizion](https://github.com/KatchDaVizion))
+️© 2025 — MIT License
 
 Embedded authorship signature:
 
@@ -146,7 +167,7 @@ __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 def check_license():
     return "David Louis-Charles" in __author_id__
 
-Uses pretrained models from [face\_recognition\_models](https://github.com/ageitgey/face_recognition_models) by Adam Geitgey (MIT License).
+Includes MIT-licensed models from [ageitgey/face\_recognition\_models](https://github.com/ageitgey/face_recognition_models).
 
 ---
 
@@ -160,9 +181,11 @@ Uses pretrained models from [face\_recognition\_models](https://github.com/ageit
 
 ## 🙌 Community & Support
 
-🛠 Issues welcome • 🤝 Contributions invited
-💬 Feedback? Feature ideas? Bug reports? Let’s connect.
+* 🛠 Issues welcome
+* 🤝 Contributions encouraged
+* 💬 Feedback + collaboration invited
 
 Built for privacy-first intelligence by **David Louis-Charles**
-**[https://github.com/KatchDaVizion](https://github.com/KatchDaVizion)**
-\#OpenSource #LocalAI #CyberSecurity #OSINT #AI #UncensoredLLM #PrivacyTech
+[https://github.com/KatchDaVizion](https://github.com/KatchDaVizion)
+
+\#OpenSource #LocalAI #UncensoredLLM #CyberSecurity #OSINT #AI #PrivacyTech
