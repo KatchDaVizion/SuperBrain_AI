@@ -118,7 +118,7 @@ python3 clear_keys.py
 
 ## 💻 Installation
 
-### 🐈 On Linux / WSL / Kali / Ubuntu:
+### 🐧 On Linux / WSL / Kali / Ubuntu:
 
 chmod +x launch_ai_portable.sh
 ./launch_ai_portable.sh
