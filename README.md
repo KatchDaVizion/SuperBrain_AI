@@ -72,6 +72,28 @@ With SuperBrain:
 
 ---
 
+## 🔐 Secure Assistant Setup
+
+Each SuperBrain assistant (OpenAI, Claude, Gemini, Groq) supports **encrypted API key storage**:
+
+✅ No more retyping  
+✅ Reuses your saved key  
+✅ Detects invalid keys and prompts again  
+✅ Fully offline-safe
+
+### How it works:
+
+- The first time you launch an assistant, you paste your API key.
+- It’s encrypted using your Linux/macOS username and stored in your home folder (e.g. `~/.openai_api.enc`).
+- If the key is ever invalid (expired or revoked), SuperBrain prompts you for a new one.
+- You can **manually clear all stored keys** using:
+
+python3 clear_keys.py
+
+🔐 Your keys are never shared, stored in plain text, or uploaded anywhere.
+Everything stays 100% local, protected with cryptography.Fernet.
+---
+
 ## 💻 Installation
 
 ### 🐧 On Linux / WSL / Kali / Ubuntu:
