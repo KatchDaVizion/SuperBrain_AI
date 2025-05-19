@@ -4,18 +4,21 @@
 
 import os
 import subprocess
-import json
+import sys
+import base64
+import getpass
+import hashlib
+from cryptography.fernet import Fernet
 from datetime import datetime, timezone
-import google.generativeai as genai
-from memory_encryption import encrypt_text
 
-MEMORY_FILE = "../memory/memory_db.json"
-SOURCE = "Gemini"
-
+# 🔄 Ensure latest Gemini SDK
 def ensure_latest_gemini():
     try:
         print("[🔄] Checking for Gemini SDK updates...")
-        subprocess.run(["pip", "install", "--upgrade", "google-generativeai"], check=True)
+        subprocess.run([
+            os.path.join(sys.prefix, "bin", "pip"),
+            "install", "--upgrade", "google-generativeai", "--break-system-packages"
+        ], check=True)
         import google.generativeai as genai
         print(f"[ℹ️] Gemini SDK version: {genai.__version__}")
     except Exception as e:
@@ -23,30 +26,65 @@ def ensure_latest_gemini():
 
 ensure_latest_gemini()
 
-if not os.getenv("GEMINI_API_KEY"):
-    print("[🔐] Missing Gemini API Key. Get yours at https://makersuite.google.com/app/apikey")
-    os.environ["GEMINI_API_KEY"] = input("Paste Gemini API Key: ")
+# 🔐 Secure API key store
+KEY_FILE = os.path.expanduser("~/.gemini_api.enc")
+SECRET = hashlib.sha256(getpass.getuser().encode()).digest()
+FERNET_KEY = base64.urlsafe_b64encode(SECRET[:32])
+fernet = Fernet(FERNET_KEY)
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model_name = os.getenv("GEMINI_MODEL") or input("[🧠] Enter Gemini model (default = gemini-pro): ") or "gemini-pro"
+def save_encrypted_api_key(api_key):
+    with open(KEY_FILE, "wb") as f:
+        f.write(fernet.encrypt(api_key.encode()))
+
+def load_encrypted_api_key():
+    if not os.path.exists(KEY_FILE):
+        return None
+    try:
+        with open(KEY_FILE, "rb") as f:
+            return fernet.decrypt(f.read()).decode()
+    except:
+        return None
+
+# Load or validate API key
+import google.generativeai as genai
+def get_valid_gemini_client():
+    for _ in range(2):
+        api_key = load_encrypted_api_key()
+        if not api_key:
+            print("[🔐] Missing Gemini API Key. Get yours at https://makersuite.google.com/app/apikey")
+            api_key = input("Paste Gemini API Key: ")
+            save_encrypted_api_key(api_key)
+        else:
+            print("[🔑] Reusing encrypted Gemini API Key.")
+
+        try:
+            genai.configure(api_key=api_key)
+            models = genai.list_models()
+            return api_key, models
+        except Exception as e:
+            print(f"[!] Stored API key failed: {e}\n[↩️] Please enter a new one.")
+            os.remove(KEY_FILE)
+
+    print("[❌] Failed to authenticate after retry.")
+    exit(1)
+
+api_key, all_models = get_valid_gemini_client()
+
+# 🔍 Choose a valid model
+supported_models = [
+    m.name for m in all_models
+    if "generateContent" in m.supported_generation_methods
+    and "vision" not in m.name
+    and not m.name.endswith("deprecated")
+]
+print("[📋] Supported models:", supported_models)
+
+model_name = os.getenv("GEMINI_MODEL")
+if model_name not in supported_models:
+    model_name = "models/gemini-1.5-flash" if "models/gemini-1.5-flash" in supported_models else supported_models[0]
+    print(f"[⚙️] Using fallback model: {model_name}")
+
 model = genai.GenerativeModel(model_name)
-
-def save_to_memory(prompt, answer):
-    os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
-    memory = []
-    if os.path.exists(MEMORY_FILE):
-        with open(MEMORY_FILE, "r") as f:
-            memory = json.load(f)
-
-    memory.append({
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "source": SOURCE,
-        "prompt": encrypt_text(prompt),
-        "response": encrypt_text(answer)
-    })
-
-    with open(MEMORY_FILE, "w") as f:
-        json.dump(memory, f, indent=2)
 
 print("\n🤖 [Gemini Assistant] — Type 'exit' to quit.\n")
 
@@ -57,7 +95,6 @@ while True:
     try:
         response = model.generate_content(user_input)
         print("Gemini:", response.text)
-        save_to_memory(user_input, response.text)
     except Exception as e:
         print(f"[!] Error: {e}")
 

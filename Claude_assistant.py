@@ -4,48 +4,67 @@
 
 import os
 import subprocess
-import json
+import sys
+import base64
+import getpass
+import hashlib
 from datetime import datetime, timezone
+from cryptography.fernet import Fernet
 import anthropic
-from memory_encryption import encrypt_text
 
-MEMORY_FILE = "../memory/memory_db.json"
-SOURCE = "Claude"
-
+# 🔄 Ensure latest Claude SDK (Anthropic)
 def ensure_latest_anthropic():
     try:
         print("[🔄] Checking for Anthropic SDK updates...")
-        subprocess.run(["pip", "install", "--upgrade", "anthropic"], check=True)
-        import anthropic
+        subprocess.run([os.path.join(sys.prefix, "bin", "pip"), "install", "--upgrade", "anthropic", "--break-system-packages"], check=True)
         print(f"[ℹ️] Anthropic SDK version: {anthropic.__version__}")
     except Exception as e:
         print(f"[!] Failed to update Claude SDK: {e}")
 
 ensure_latest_anthropic()
 
-if not os.getenv("ANTHROPIC_API_KEY"):
-    print("[🔐] Missing Claude API Key. Get it at https://console.anthropic.com/account/keys")
-    os.environ["ANTHROPIC_API_KEY"] = input("Paste Claude API Key: ")
+# 🔐 Encrypted API key storage
+KEY_FILE = os.path.expanduser("~/.claude_api.enc")
+SECRET = hashlib.sha256(getpass.getuser().encode()).digest()
+FERNET_KEY = base64.urlsafe_b64encode(SECRET[:32])
+fernet = Fernet(FERNET_KEY)
 
-client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-model = os.getenv("CLAUDE_MODEL") or input("[🧠] Enter Claude model (default = claude-3-opus-20240229): ") or "claude-3-opus-20240229"
+def save_encrypted_api_key(api_key):
+    with open(KEY_FILE, "wb") as f:
+        f.write(fernet.encrypt(api_key.encode()))
 
-def save_to_memory(prompt, answer):
-    os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
-    memory = []
-    if os.path.exists(MEMORY_FILE):
-        with open(MEMORY_FILE, "r") as f:
-            memory = json.load(f)
+def load_encrypted_api_key():
+    if not os.path.exists(KEY_FILE):
+        return None
+    try:
+        with open(KEY_FILE, "rb") as f:
+            return fernet.decrypt(f.read()).decode()
+    except:
+        return None
 
-    memory.append({
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "source": SOURCE,
-        "prompt": encrypt_text(prompt),
-        "response": encrypt_text(answer)
-    })
+def get_valid_claude_client():
+    for _ in range(2):
+        api_key = load_encrypted_api_key()
+        if not api_key:
+            print("[🔐] Missing Claude (Anthropic) API Key. Get it at https://console.anthropic.com/account/keys")
+            api_key = input("Paste Claude API Key: ")
+            save_encrypted_api_key(api_key)
+        else:
+            print("[🔑] Reusing encrypted Claude API Key.")
 
-    with open(MEMORY_FILE, "w") as f:
-        json.dump(memory, f, indent=2)
+        try:
+            client = anthropic.Anthropic(api_key=api_key)
+            _ = client.models.list()
+            return client
+        except Exception as e:
+            print(f"[!] Stored API key failed: {e}\n[↩️] Please enter a new one.")
+            os.remove(KEY_FILE)
+
+    print("[❌] Failed to authenticate after retry.")
+    exit(1)
+
+client = get_valid_claude_client()
+model = os.getenv("CLAUDE_MODEL", "claude-3-opus-20240229")
 
 print("\n🤖 [Claude Assistant] — Type 'exit' to quit.\n")
 
@@ -59,9 +78,7 @@ while True:
             max_tokens=1000,
             messages=[{"role": "user", "content": user_input}]
         )
-        reply = response.content[0].text
-        print("Claude:", reply)
-        save_to_memory(user_input, reply)
+        print("Claude:", response.content[0].text)
     except Exception as e:
         print(f"[!] Error: {e}")
 

@@ -4,18 +4,22 @@
 
 import os
 import subprocess
-import json
+import sys
+import base64
+import getpass
+import hashlib
 from datetime import datetime, timezone
+from cryptography.fernet import Fernet
 from groq import Groq
-from memory_encryption import encrypt_text
 
-MEMORY_FILE = "../memory/memory_db.json"
-SOURCE = "Groq"
-
+# 🔄 Ensure latest Groq SDK
 def ensure_latest_groq():
     try:
         print("[🔄] Checking for Groq SDK updates...")
-        subprocess.run(["pip", "install", "--upgrade", "groq"], check=True)
+        subprocess.run([
+            os.path.join(sys.prefix, "bin", "pip"),
+            "install", "--upgrade", "groq", "--break-system-packages"
+        ], check=True)
         import groq
         print(f"[ℹ️] Groq SDK version: {groq.__version__}")
     except Exception as e:
@@ -23,29 +27,49 @@ def ensure_latest_groq():
 
 ensure_latest_groq()
 
-if not os.getenv("GROQ_API_KEY"):
-    print("[🔐] Missing Groq API Key. Get yours at https://console.groq.com/api-keys")
-    os.environ["GROQ_API_KEY"] = input("Paste Groq API Key: ")
+# 🔐 Encrypted API key storage
+KEY_FILE = os.path.expanduser("~/.groq_api.enc")
+SECRET = hashlib.sha256(getpass.getuser().encode()).digest()
+FERNET_KEY = base64.urlsafe_b64encode(SECRET[:32])
+fernet = Fernet(FERNET_KEY)
 
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
-model = os.getenv("GROQ_MODEL") or input("[🧠] Enter Groq model (default = mixtral-8x7b-32768): ") or "mixtral-8x7b-32768"
+def save_encrypted_api_key(api_key):
+    with open(KEY_FILE, "wb") as f:
+        f.write(fernet.encrypt(api_key.encode()))
 
-def save_to_memory(prompt, answer):
-    os.makedirs(os.path.dirname(MEMORY_FILE), exist_ok=True)
-    memory = []
-    if os.path.exists(MEMORY_FILE):
-        with open(MEMORY_FILE, "r") as f:
-            memory = json.load(f)
+def load_encrypted_api_key():
+    if not os.path.exists(KEY_FILE):
+        return None
+    try:
+        with open(KEY_FILE, "rb") as f:
+            return fernet.decrypt(f.read()).decode()
+    except:
+        return None
 
-    memory.append({
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "source": SOURCE,
-        "prompt": encrypt_text(prompt),
-        "response": encrypt_text(answer)
-    })
+# Load or prompt for API key
+def get_valid_groq_client():
+    for _ in range(2):
+        api_key = load_encrypted_api_key()
+        if not api_key:
+            print("[🔐] Missing Groq API Key. Get yours at https://console.groq.com/api-keys")
+            api_key = input("Paste Groq API Key: ")
+            save_encrypted_api_key(api_key)
+        else:
+            print("[🔑] Reusing encrypted Groq API Key.")
 
-    with open(MEMORY_FILE, "w") as f:
-        json.dump(memory, f, indent=2)
+        try:
+            test_client = Groq(api_key=api_key)
+            _ = test_client.models.list()
+            return test_client
+        except Exception as e:
+            print(f"[!] Stored API key failed: {e}\n[↩️] Please enter a new one.")
+            os.remove(KEY_FILE)
+
+    print("[❌] Failed to authenticate after retry.")
+    exit(1)
+
+client = get_valid_groq_client()
+model = os.getenv("GROQ_MODEL", "mixtral-8x7b-32768")
 
 print("\n🤖 [Groq Assistant] — Type 'exit' to quit.\n")
 
@@ -58,9 +82,7 @@ while True:
             model=model,
             messages=[{"role": "user", "content": user_input}]
         )
-        reply = response.choices[0].message.content
-        print("Groq:", reply)
-        save_to_memory(user_input, reply)
+        print("Groq:", response.choices[0].message.content)
     except Exception as e:
         print(f"[!] Error: {e}")
 
