@@ -1,9 +1,8 @@
 #!/bin/bash
-# SuperBrain AI Platform
-# Created by David Louis-Charles (GitHub: KatchDaVizion)
-# © 2025 All Rights Reserved — https://github.com/KatchDaVizion
+# SuperBrain AI Portable Launcher by David Louis-Charles (KatchDaVizion)
+# Version: 1.0.1 | Updated: 2025-05-19
 
-# ====================== CONFIG ======================
+# =============== CONFIGURATION ===============
 PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PYTHON_BIN="python3"
 REQUIREMENTS_FILE="$PROJECT_ROOT/requirements.txt"
@@ -13,31 +12,45 @@ IS_WSL=$(grep -i microsoft /proc/version 2>/dev/null)
 OLLAMA_PID_FILE="$PROJECT_ROOT/ollama.pid"
 RESOURCE_MONITOR_PID_FILE="$PROJECT_ROOT/resource_monitor.pid"
 VENV_DIR="$HOME/safe_venv"
-# ====================================================
+# =============================================
 
 echo -e "\n🧠 [SuperBrain AI Portable Launcher]"
-$PYTHON_BIN update_check.py
 
-# --- OS Detection ---
+# =============== OFFLINE DETECTION ===============
+is_offline() {
+    ping -q -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || return 0
+    return 1
+}
+
+if is_offline; then
+    echo "[🔌] Offline mode detected! Skipping updates and network checks."
+    OFFLINE=true
+else
+    $PYTHON_BIN update_check.py
+    OFFLINE=false
+fi
+
+# =============== ENVIRONMENT DETECTION ===============
 echo "[+] Detecting environment and preparing system..."
 OS_NAME=$(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"')
 echo "[🌐] Detected OS: $OS_NAME"
 
-# --- Create virtual environment if needed ---
+# =============== VIRTUAL ENVIRONMENT ===============
 if [ ! -d "$VENV_DIR" ]; then
     echo "[+] Creating virtual environment..."
     $PYTHON_BIN -m venv "$VENV_DIR"
 fi
 
-# --- Activate virtual environment ---
 echo "[+] Activating virtual environment..."
 source "$VENV_DIR/bin/activate"
 
-# ================== INSTALL BASICS ==================
-echo "[+] Ensuring pip and setuptools are up to date..."
-pip install --upgrade pip setuptools --break-system-packages
+# =============== PIP UPGRADE ===============
+if [ "$OFFLINE" = false ]; then
+    echo "[+] Ensuring pip and setuptools are up to date..."
+    pip install --upgrade pip setuptools --break-system-packages
+fi
 
-# macOS fallback
+# macOS special case
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     echo "[🍏] macOS detected. Using brew for Tor if needed."
     if ! command -v tor &>/dev/null; then
@@ -46,27 +59,28 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 fi
 
-# ================== REQUIREMENTS =====================
+# =============== INSTALL REQUIREMENTS ===============
 echo "[+] Installing dependencies from requirements.txt..."
 while IFS= read -r package; do
     [[ -z "$package" || "$package" == \#* ]] && continue
     base_package=$(echo "$package" | sed 's/[<>=].*//')
+
     if ! pip show "$base_package" &>/dev/null; then
         echo "[📦] Installing: $package"
-        pip install "$package" --break-system-packages
+        pip install "$package" --break-system-packages || echo "[⚠️] Couldn't install: $package"
     fi
-    # Ensure old OpenAI fix
+
+    # Force OpenAI fix
     [[ "$package" == openai* ]] && pip install openai==0.28 --break-system-packages
 
-    # For face_recognition: ensure cmake and dlib
+    # dlib fallback
     if [[ "$package" == face_recognition* ]]; then
         sudo apt-get install -y cmake
         pip install dlib --no-cache-dir --force-reinstall --break-system-packages || echo "[⚠️] dlib failed manually, skipping for now."
     fi
-
 done < "$REQUIREMENTS_FILE"
 
-# ==================== START OLLAMA ===================
+# =============== DAEMONS ===============
 start_ollama() {
     echo "[+] Starting Ollama in the background..."
     ollama serve > /dev/null 2>&1 &
@@ -98,7 +112,7 @@ stop_resource_monitor() {
     fi
 }
 
-# ==================== MAIN MENU =====================
+# =============== MAIN MENU ===============
 echo ""
 echo "🧠 Welcome to SuperBrain Launcher"
 echo "----------------------------------"
@@ -120,7 +134,6 @@ echo ""
 read -p "Choose an assistant [1-10] or local LLM [a-z]: " choice
 
 OLLAMA_RUNNING=false
-RESOURCE_MONITOR_RUNNING=false
 
 case "$choice" in
     1) "$VENV_DIR/bin/python3" openai_assistant.py ;;

@@ -27,3 +27,4 @@ scrapers/darkweb_scraper.py
 scrapers/web_scraper.py
 security/
 __pycache__/
+ollama.pid
