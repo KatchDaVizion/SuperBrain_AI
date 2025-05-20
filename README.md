@@ -1,6 +1,6 @@
 # 🧠 SuperBrain AI – Offline, Ethical, Research-Driven AI Platform (V1.1)
 
-> A modular AI research platform combining cloud intelligence with offline uncensored LLMs — encrypted, portable, and built for privacy-first users.
+> A modular AI research platform combining popular cloud models with offline uncensored LLMs — encrypted, portable, and built for privacy-first users.
 
 ---
 
@@ -8,143 +8,175 @@
 
 **SuperBrain AI** is a **local-first**, privacy-respecting AI platform built for advanced research, investigation, and offline intelligence. You can run:
 
-* ✅ API-powered agents like GPT-4, Claude, Gemini, and Groq
-* ✅ Local LLMs like TinyLLaMA, LLaMA2, Mistral, Phi via **Ollama**
-* ✅ Dark web scrapers, document ingestion, face recognition, and more
+✅ API-powered agents like GPT-4, Claude, Gemini, and Groq
+✅ Local LLMs like TinyLLaMA, LLaMA2, Mistral, Phi via **Ollama**
+✅ Dark web scrapers, document ingestion, face recognition, and more (Pro only)
 
-All while **logging results**, **storing memory**, and **growing your assistant’s knowledge over time**.
+Everything runs fully offline — and every answer is logged, learned, and improved over time through an encrypted memory system.
 
 ---
 
-## 🔐 Multi-AI Query Assistant 
+## 🔍 Why Use Uncensored Local Models?
 
-* 🔑 **Encrypted API Key Storage**
-  * No more plaintext `.txt` files
-  * Reuses keys from encrypted `~/.openai_api.enc`, etc.
-  * Same system used in all single assistants
+Online AI tools are often:
 
-* 💾 **Automatic Memory Logging**
-  * Every answer is saved with timestamp and source
-  * Recalled by your local LLM for future answers
+* Filtered or politically limited
+* Rate-limited or API-bound
+* Logged and monitored by third parties
 
-* 📊 **Tabular Answer View**
-  * Get GPT-4, Claude, Gemini, and Groq answers **side-by-side**
-  * Powered by the `tabulate` library for clean comparison
+With SuperBrain, you:
 
-To launch:
+* Own your data and tools
+* Can run **uncensored models** like TinyLLaMA or Mistral for raw knowledge access
+* Perform deeper research without censorship
+* Are free to build intelligence with full autonomy
+
+SuperBrain is designed for **ethical research** only. Misuse contradicts its mission.
+
+---
+
+## 🔐 Multi-AI Query Assistant (Research Mode)
+
+SuperBrain includes a unique **multi-model querying script**:
+
+```bash
 python3 multi_ai_query.py
+```
 
-✅ Core Features
-🧠 RAG Memory System – Learn over time
+🧠 Ask one question → Get responses from **GPT-4, Claude, Gemini, and Groq** side-by-side.
 
-🔌 Multi-AI Query Hub – GPT-4, Claude, Gemini, Groq
+### Benefits:
 
-💬 Local LLM Chat Interface – Ollama-powered
+* 🔍 Instantly compare model reasoning styles
+* 🧠 Save all results to memory (RAG-enhanced)
+* 🔒 API keys are encrypted and reused automatically
+* 📊 Tabulated output powered by `tabulate`
 
-🕵️ Dark Web + Surface Scraper – .onion ready (Pro)
+This supercharges your insight-building and allows **open research consensus discovery**.
 
-📚 PDF/TXT Ingestion to Memory – Feed your assistant (Pro)
+---
 
-🔐 Memory Encryption – Passphrase-based AES (Pro)
+## ✅ Core Features
 
-🧑‍  Facial Recognition Agent – Offline image matching (Pro)
+* 🔌 **Multi-AI Hub** – GPT-4, Claude, Gemini, Groq (API) + Local LLMs (Ollama)
+* 🧠 **Memory System + RAG Recall** – Past answers stored and reused semantically
+* 🕵️ **Dark Web Scraper** – Tor-powered `.onion` access *(Pro)*
+* 📚 **PDF/Document Ingestion** – Feed reports or notes into memory *(Pro)*
+* 🧑‍💻 **Facial Recognition Agent** – Match images offline *(Pro)*
+* 🔐 **Encrypted Memory Mode** – AES passphrase protection *(Pro)*
+* 🧹 **Plugin Loader** – Drop in your own Python tools
+* 📀 **USB Portable Launcher** – Run from a flash drive or SSD
+* ↻ **Versioned, Auto-Updating Architecture**
 
-🧹 Plugin Loader – Drop Python tools into /plugins
+---
 
-📀 USB Portable Launcher – Boot anywhere, work offline
+## 📂 LLM Model Downloads & RAM Estimates
 
-↻ Self-Updating Scripts – Built-in version checks and updater
+You can download any model from [ollama.com](https://ollama.com) directly inside SuperBrain:
 
-🧠 How the AI Learns Over Time
-Each query from GPT-4, Claude, Gemini, Groq, and local LLMs is:
+```bash
+/download phi3
+/model 2  # switch model
+```
 
-Timestamped
+| Model Name   | Minimum RAM Required |
+| ------------ | -------------------- |
+| TinyLLaMA    | 1.7 GB               |
+| Phi-3        | 3 GB                 |
+| LLaMA2 7B    | 6–8 GB               |
+| Mistral      | 10–12 GB             |
+| Mixtral 8x7B | 24+ GB               |
 
-Stored in memory_db.json
+⚠️ **Always check available memory before switching models.** SuperBrain dynamically adjusts based on system RAM.
 
-Retrieved and used for context with semantic similarity
+---
 
-Optionally encrypted with passphrase protection
+## 🔐 Secure Assistant Setup
 
-Your AI grows smarter with each interaction.
+All assistants (OpenAI, Claude, Gemini, Groq) use encrypted API key storage:
 
-📦 Installation
-🐧 Linux / WSL / Kali / Ubuntu:
+* 🔐 Keys saved to `~/.openai_api.enc`, etc.
+* 🔁 Reused securely without plaintext
+* 🧹 Delete all keys with: `python3 clear_keys.py`
 
+---
+
+## 💻 Installation
+
+### 🐧 Linux / WSL / Kali / Ubuntu:
+
+```bash
 chmod +x launch_ai_portable.sh
-
 ./launch_ai_portable.sh
+```
 
-🍏 macOS:
+### 🍏 macOS:
 
+```bash
 chmod +x launch_macOS.sh
-
 ./launch_macOS.sh
+```
 
-📂 LLM Download & RAM Estimates
-SuperBrain supports all local LLMs available through Ollama. You can download and switch between models directly inside the assistant interface.
+---
 
-Model Name	Minimum RAM Required
-tinyllama	1.7 GB
-phi-3	3 GB
-llama2 (7B)	6–8 GB
-mistral	10–12 GB
-mixtral (8x7B)	24+ GB
+## 🧠 How the AI Learns Over Time
 
-🧠 To download a new model:
+Every assistant (local or API) stores results with:
 
-Use '/download <model name>' to download any model on ollama : https://ollama.com/
-🔁 To switch to a downloaded model:
+* ⏱ Timestamp
+* 📍 Source
+* 🔍 Embedded content for future recall (RAG)
 
-'/model <number>' in the local assistant to run the model needed
-⚠️ Note: Make sure your system has enough free RAM before switching to larger models. SuperBrain dynamically adjusts based on your available resources.
+> The more you use SuperBrain, the smarter it gets.
 
+---
 
-🔐 Encrypted API Key Storage
-No plaintext keys. All assistants (and the multi-model assistant) now use:
+## 🛡️ Ethics Statement
 
-Encrypted keys stored in your home dir (e.g., ~/.openai_api.enc)
+SuperBrain provides uncensored tools. That makes **your ethical responsibility** vital.
 
-Automatically reused on next run
+This platform:
 
-Keys tied to your username for extra security
+* ✅ Promotes research, privacy, open exploration
+* ❌ Prohibits illegal, unethical, or abusive use
+* 🛡 Defends the right to study and investigate safely
 
-To reset all stored keys:
+Use it wisely. Empower, don't exploit.
 
-python3 clear_keys.py
+---
 
-🛡️ Ethics Statement
-SuperBrain provides uncensored tools — it is your responsibility to use them ethically.
+## 👮 Author & License
 
-This project:
+**SuperBrain AI Platform**
+Created by **David Louis-Charles** ([KatchDaVizion](https://github.com/KatchDaVizion))
+© 2025 — MIT License
 
-Supports intelligence, education, privacy, and cybersecurity
+Embedded Signature:
 
-Rejects disinformation, illegal activity, abuse, and harm
-
-Is licensed under MIT with fair-use principles
-
-👮 Author & License
-SuperBrain AI Platform
-Created by David Louis-Charles
-GitHub: github.com/KatchDaVizion
-© 2025 – MIT License
-
-Embedded signature:
-
+```python
 __author_id__ = "KatchDaVizion_2025_DLC_SIG"
 def check_license():
     return "David Louis-Charles" in __author_id__
+```
 
-🙌 Community & Distribution
-📦 GitHub Repo: github.com/KatchDaVizion/SuperBrain_AI
+Includes models from [ageitgey/face\_recognition\_models](https://github.com/ageitgey/face_recognition_models) (MIT).
 
-🛍️ Gumroad Pro Version (coming soon)
+---
 
-💽 Bootable USB Version (upon request)
+## 📦 Distribution
 
-🛠 Feature suggestions, issues, and contributions welcome
+* 📂 GitHub: [github.com/KatchDaVizion/SuperBrain\_AI](https://github.com/KatchDaVizion/SuperBrain_AI)
+* 🛍️ Gumroad Pro (coming soon)
+* 💽 Bootable USB version available upon request
 
-🌐 Tags
-#OfflineAI #UncensoredLLM #CyberSecurity #OSINT #PrivacyTech #LocalLLM #DarkWeb #ResearchAssistant #SuperBrainAI
+---
 
+## 🙌 Community & Support
+
+* 🛠 Issues welcome
+* 🤝 Contributions encouraged
+* 💬 Feedback always appreciated
+
+> Built for ethical intelligence by David Louis-Charles.
+
+**#OfflineAI #UncensoredLLM #CyberSecurity #OSINT #PrivacyTech #SuperBrainAI #RAG #DarkWebResearch #AI4Good**
