@@ -16,9 +16,7 @@ All while **logging results**, **storing memory**, and **growing your assistant�
 
 ---
 
-## 🔐 Major Upgrade: Multi-AI Query Assistant (v1.1)
-
-**`multi_ai_query.py`** has been upgraded with:
+## 🔐 Multi-AI Query Assistant 
 
 * 🔑 **Encrypted API Key Storage**
   * No more plaintext `.txt` files
@@ -49,7 +47,7 @@ python3 multi_ai_query.py
 
 🔐 Memory Encryption – Passphrase-based AES (Pro)
 
-🧑‍💻 Facial Recognition Agent – Offline image matching (Pro)
+🧑‍  Facial Recognition Agent – Offline image matching (Pro)
 
 🧹 Plugin Loader – Drop Python tools into /plugins
 
@@ -74,24 +72,33 @@ Your AI grows smarter with each interaction.
 🐧 Linux / WSL / Kali / Ubuntu:
 
 chmod +x launch_ai_portable.sh
+
 ./launch_ai_portable.sh
 
 🍏 macOS:
 
 chmod +x launch_macOS.sh
+
 ./launch_macOS.sh
 
 📂 LLM Download & RAM Estimates
-SuperBrain supports all Ollama models:
+SuperBrain supports all local LLMs available through Ollama. You can download and switch between models directly inside the assistant interface.
 
-Model	Min RAM Needed
-TinyLLaMA	1.7 GB
-Phi-3	3 GB
-LLaMA2 7B	6–8 GB
-Mistral	10–12 GB
-Mixtral 8x7B	24+ GB
+Model Name	Minimum RAM Required
+tinyllama	1.7 GB
+phi-3	3 GB
+llama2 (7B)	6–8 GB
+mistral	10–12 GB
+mixtral (8x7B)	24+ GB
 
-Use /download <model> and /model <number> in the local assistant.
+🧠 To download a new model:
+
+Use '/download <model name>' to download any model on ollama : https://ollama.com/
+🔁 To switch to a downloaded model:
+
+'/model <number>' in the local assistant to run the model needed
+⚠️ Note: Make sure your system has enough free RAM before switching to larger models. SuperBrain dynamically adjusts based on your available resources.
+
 
 🔐 Encrypted API Key Storage
 No plaintext keys. All assistants (and the multi-model assistant) now use:
@@ -105,6 +112,7 @@ Keys tied to your username for extra security
 To reset all stored keys:
 
 python3 clear_keys.py
+
 🛡️ Ethics Statement
 SuperBrain provides uncensored tools — it is your responsibility to use them ethically.
 
