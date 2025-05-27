@@ -1,4 +1,4 @@
-# 🧠 SuperBrain AI – Offline, Ethical, Research-Driven AI Platform (V1.1)
+# 🧠 SuperBrain AI – Offline, Ethical, Research-Driven AI Platform (V1.2)
 
 > A modular AI research platform combining popular cloud models with offline uncensored LLMs — encrypted, portable, and built for privacy-first users.
 
@@ -8,8 +8,8 @@
 
 **SuperBrain AI** is a **local-first**, privacy-respecting AI platform built for advanced research, investigation, and offline intelligence. You can run:
 
-✅ API-powered agents like GPT-4, Claude, Gemini, and Groq
-✅ Local LLMs like TinyLLaMA, LLaMA2, Mistral, Phi via **Ollama**
+✅ API-powered agents like GPT-4, Claude, Gemini, Groq, and **Venice**  
+✅ Local LLMs like TinyLLaMA, LLaMA2, Mistral, Phi via **Ollama**  
 ✅ Dark web scrapers, document ingestion, face recognition, and more (Pro only)
 
 Everything runs fully offline — and every answer is logged, learned, and improved over time through an encrypted memory system.
@@ -43,7 +43,7 @@ SuperBrain includes a unique **multi-model querying script**:
 python3 multi_ai_query.py
 ```
 
-🧠 Ask one question → Get responses from **GPT-4, Claude, Gemini, and Groq** side-by-side.
+🧠 Ask one question → Get responses from **GPT-4, Claude, Gemini, Groq, and Venice** side-by-side.
 
 ### Benefits:
 
@@ -58,7 +58,7 @@ This supercharges your insight-building and allows **open research consensus dis
 
 ## ✅ Core Features
 
-* 🔌 **Multi-AI Hub** – GPT-4, Claude, Gemini, Groq (API) + Local LLMs (Ollama)
+* 🔌 **Multi-AI Hub** – GPT-4, Claude, Gemini, Groq, Venice (API) + Local LLMs (Ollama)
 * 🧠 **Memory System + RAG Recall** – Past answers stored and reused semantically
 * 🕵️ **Dark Web Scraper** – Tor-powered `.onion` access *(Pro)*
 * 📚 **PDF/Document Ingestion** – Feed reports or notes into memory *(Pro)*
@@ -93,7 +93,7 @@ You can download any model from [ollama.com](https://ollama.com) directly inside
 
 ## 🔐 Secure Assistant Setup
 
-All assistants (OpenAI, Claude, Gemini, Groq) use encrypted API key storage:
+All assistants (OpenAI, Claude, Gemini, Groq, Venice) use encrypted API key storage:
 
 * 🔐 Keys saved to `~/.openai_api.enc`, etc.
 * 🔁 Reused securely without plaintext
@@ -147,8 +147,8 @@ Use it wisely. Empower, don't exploit.
 
 ## 👮 Author & License
 
-**SuperBrain AI Platform**
-Created by **David Louis-Charles** ([KatchDaVizion](https://github.com/KatchDaVizion))
+**SuperBrain AI Platform**  
+Created by **David Louis-Charles** ([KatchDaVizion](https://github.com/KatchDaVizion))  
 © 2025 — MIT License
 
 Embedded Signature:
@@ -159,13 +159,13 @@ def check_license():
     return "David Louis-Charles" in __author_id__
 ```
 
-Includes models from [ageitgey/face\_recognition\_models](https://github.com/ageitgey/face_recognition_models) (MIT).
+Includes models from [ageitgey/face_recognition_models](https://github.com/ageitgey/face_recognition_models) (MIT).
 
 ---
 
 ## 📦 Distribution
 
-* 📂 GitHub: [github.com/KatchDaVizion/SuperBrain\_AI](https://github.com/KatchDaVizion/SuperBrain_AI)
+* 📂 GitHub: [github.com/KatchDaVizion/SuperBrain_AI](https://github.com/KatchDaVizion/SuperBrain_AI)
 * 🛍️ Gumroad Pro (coming soon)
 * 💽 Bootable USB version available upon request
 
@@ -179,4 +179,4 @@ Includes models from [ageitgey/face\_recognition\_models](https://github.com/age
 
 > Built for ethical intelligence by David Louis-Charles.
 
-**#OfflineAI #UncensoredLLM #CyberSecurity #OSINT #PrivacyTech #SuperBrainAI #RAG #DarkWebResearch #AI4Good**
+**#OfflineAI #UncensoredLLM #CyberSecurity #OSINT #PrivacyTech #SuperBrainAI #RAG #DarkWebResearch #AI4Good #VeniceAI #PortableAI**
