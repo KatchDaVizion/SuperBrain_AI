@@ -28,3 +28,5 @@ scrapers/web_scraper.py
 security/
 __pycache__/
 ollama.pid
+utils/__init__.py
+utils/config.py

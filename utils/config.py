@@ -15,48 +15,64 @@ os.makedirs(CONFIG_DIR, exist_ok=True)
 def load_key(file, hint, api_check=None):
     path = os.path.join(CONFIG_DIR, file)
     key = None
-    if os.path.exists(path):
-        with open(path) as f:
-            key = f.read().strip()
 
-    if not key:
-        log_warning(f"Missing or invalid {file}. {hint}", module="config")
-        key = input(f"Enter API key for {file} (or leave blank to skip): ").strip()
+    # ✅ Create file if missing
+    if not os.path.exists(path):
+        print(f"[🗝️] '{file}' not found. Let's create it.")
+        key = input(f"{hint}\nEnter your API key for {file}: ").strip()
         if key:
             save_key(file, key)
+        else:
+            log_warning(f"No key entered for {file}. Skipping.", module="config")
         return key
 
+    # ✅ Read existing key
+    with open(path) as f:
+        key = f.read().strip()
+
+    # 🔁 If key is empty, ask again
+    if not key:
+        print(f"[⚠️] '{file}' is empty. Please provide a valid key.")
+        key = input(f"{hint}\nEnter your API key for {file}: ").strip()
+        if key:
+            save_key(file, key)
+        else:
+            log_warning(f"No key entered for {file}. Skipping.", module="config")
+        return key
+
+    # ✅ Optionally check if API key works
     if api_check:
-        if not api_check['url']:
-            log_warning(f"API check URL not provided for {file}.", module="config")
-            return key
         try:
             headers = api_check.get('headers', {})
             method = api_check.get('method', 'get').lower()
             data = api_check.get('data')
-
             response = None
+
             if method == 'post':
                 response = requests.post(api_check['url'], headers=headers, json=data)
             else:
                 response = requests.get(api_check['url'], headers=headers)
 
             response.raise_for_status()
+
+            # Optional: custom logic
             if api_check.get('response_check'):
                 if not api_check['response_check'](response.json()):
-                    log_warning(f"Stored API key for {file} seems invalid.", module="config")
+                    log_warning(f"{file} API key failed check. Re-prompting...", module="config")
                     os.remove(path)
                     return load_key(file, hint, api_check)
-            elif response.status_code in [401, 403]:
-                log_warning(f"Stored API key for {file} is unauthorized.", module="config")
+
+            log_info(f"{file} API key validated.", module="config")
+
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code in [401, 403]:
+                log_warning(f"{file} API key unauthorized. Re-prompting...", module="config")
                 os.remove(path)
                 return load_key(file, hint, api_check)
             else:
-                log_info(f"API key for {file} checked and seems valid.", module="config")
-
+                log_error(f"HTTP error during API key check: {e}", module="config")
         except requests.exceptions.RequestException as e:
-            log_error(f"Error checking API key for {file}: {e}", module="config")
-            # Don't invalidate on network errors
+            log_error(f"Network error during API key check: {e}", module="config")
 
     return key
 
