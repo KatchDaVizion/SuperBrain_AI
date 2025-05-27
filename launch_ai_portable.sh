@@ -1,6 +1,7 @@
 #!/bin/bash
-# SuperBrain AI Portable Launcher by David Louis-Charles (KatchDaVizion)
-# Version: 1.0.1 | Updated: 2025-05-19
+# SuperBrain AI Platform
+# Created by David Louis-Charles (GitHub: KatchDaVizion)
+# © 2025 All Rights Reserved — https://github.com/KatchDaVizion
 
 # =============== CONFIGURATION ===============
 PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -70,10 +71,8 @@ while IFS= read -r package; do
         pip install "$package" --break-system-packages || echo "[⚠️] Couldn't install: $package"
     fi
 
-    # Force OpenAI fix
     [[ "$package" == openai* ]] && pip install openai==0.28 --break-system-packages
 
-    # dlib fallback
     if [[ "$package" == face_recognition* ]]; then
         sudo apt-get install -y cmake
         pip install dlib --no-cache-dir --force-reinstall --break-system-packages || echo "[⚠️] dlib failed manually, skipping for now."
@@ -120,18 +119,19 @@ echo "1. Run OpenAI Assistant"
 echo "2. Run Claude Assistant"
 echo "3. Run Gemini Assistant"
 echo "4. Run Groq Assistant"
-echo "5. Run Local LLM Assistant (Ollama)"
+echo "5. Run Venice Assistant"
+echo "6. Run Local LLM Assistant (Ollama)"
 echo "    a) tinyllama"
 echo "    b) llama2"
 echo "    c) mistral"
 echo "    d) phi-3"
-echo "6. Run Multi-Model Assistant"
-echo "7. Run Face Recognition Agent"
-echo "8. Run Dark Web Scraper"
-echo "9. Manual Document/Text Ingestion"
-echo "10. Quit"
+echo "7. Run Multi-Model Assistant"
+echo "8. Run Face Recognition Agent"
+echo "9. Run Dark Web Scraper"
+echo "10. Manual Document/Text Ingestion"
+echo "11. Quit"
 echo ""
-read -p "Choose an assistant [1-10] or local LLM [a-z]: " choice
+read -p "Choose an assistant [1-11] or local LLM [a-z]: " choice
 
 OLLAMA_RUNNING=false
 
@@ -140,16 +140,17 @@ case "$choice" in
     2) "$VENV_DIR/bin/python3" Claude_assistant.py ;;
     3) "$VENV_DIR/bin/python3" gemini_assistant.py ;;
     4) "$VENV_DIR/bin/python3" groq_assistant.py ;;
-    5) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py ;;
-    5a) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py tinyllama ;;
-    5b) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py llama2 ;;
-    5c) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py mistral ;;
-    5d) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py phi-3 ;;
-    6) "$VENV_DIR/bin/python3" multi_ai_query.py ;;
-    7) "$VENV_DIR/bin/python3" face_recognition_agent.py ;;
-    8) "$VENV_DIR/bin/python3" scrapers/darkweb_scraper.py ;;
-    9) "$VENV_DIR/bin/python3" utils/ingest_text_manual.py ;;
-    10) echo "[👋] Exiting. Stay sharp." && deactivate && exit 0 ;;
+    5) "$VENV_DIR/bin/python3" venice_assistant.py ;;
+    6) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py ;;
+    6a) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py tinyllama ;;
+    6b) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py llama2 ;;
+    6c) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py mistral ;;
+    6d) start_ollama; OLLAMA_RUNNING=true; "$VENV_DIR/bin/python3" local_llm_assistant.py phi-3 ;;
+    7) "$VENV_DIR/bin/python3" multi_ai_query.py ;;
+    8) "$VENV_DIR/bin/python3" face_recognition_agent.py ;;
+    9) "$VENV_DIR/bin/python3" scrapers/darkweb_scraper.py ;;
+    10) "$VENV_DIR/bin/python3" utils/ingest_text_manual.py ;;
+    11) echo "[👋] Exiting. Stay sharp." && deactivate && exit 0 ;;
     *) echo "[❌] Invalid choice. Exiting." ;;
 esac
 
@@ -166,3 +167,4 @@ deactivate
 exit 0
 
 export __author_id__="DLC-KDV-SuperBrain-2025"
+

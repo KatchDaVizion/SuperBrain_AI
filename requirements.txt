@@ -3,6 +3,7 @@ openai
 anthropic
 google-generativeai
 groq
+cryptography
 
 # === LLMs & Langchain ===
 langchain-community==0.0.27

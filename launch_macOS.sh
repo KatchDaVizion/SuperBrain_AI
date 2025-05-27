@@ -1,7 +1,7 @@
 #!/bin/bash
 # SuperBrain AI macOS Launcher
 # Created by David Louis-Charles (GitHub: KatchDaVizion)
-# Version: 1.0.1 | Updated: 2025-05-19
+# Version: 1.1.0 | Updated: 2025-05-26
 
 set -e
 
@@ -10,7 +10,9 @@ PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PYTHON_BIN="python3"
 REQUIREMENTS_FILE="$PROJECT_ROOT/requirements.txt"
 OLLAMA_PID_FILE="$PROJECT_ROOT/ollama.pid"
+RESOURCE_MONITOR_PID_FILE="$PROJECT_ROOT/resource_monitor.pid"
 VENV_DIR="$HOME/safe_venv"
+TOR_SERVICE_NAME="tor"
 # =============================================
 
 echo -e "\n🧠 [SuperBrain AI macOS Launcher]"
@@ -83,6 +85,7 @@ while IFS= read -r package; do
   if [[ "$package" == face_recognition* ]]; then
     pip install dlib --no-cache-dir --force-reinstall || echo "[⚠️] dlib failed manually, skipping."
   fi
+
 done < "$REQUIREMENTS_FILE"
 
 # ========== Tor Setup ==========
@@ -99,12 +102,18 @@ sleep 3
 
 pgrep tor >/dev/null && echo "[🧅] Tor is running." || echo "[🔴] Tor failed to start."
 
-# ========== Ollama Functions ==========
+# ========== Ollama + Resource Monitor ==========
 start_ollama() {
   echo "[+] Starting Ollama in the background..."
   ollama serve > /dev/null 2>&1 &
   echo $! > "$OLLAMA_PID_FILE"
   sleep 2
+}
+
+start_resource_monitor() {
+  echo "[+] Starting resource monitor in the background..."
+  python3 utils/resource_monitor.py &
+  echo $! > "$RESOURCE_MONITOR_PID_FILE"
 }
 
 stop_ollama() {
@@ -124,19 +133,20 @@ echo "1. Run OpenAI Assistant"
 echo "2. Run Claude Assistant"
 echo "3. Run Gemini Assistant"
 echo "4. Run Groq Assistant"
-echo "5. Run Local LLM Assistant (Ollama)"
+echo "5. Run Venice Assistant"
+echo "6. Run Local LLM Assistant (Ollama)"
 echo "   a) tinyllama"
 echo "   b) llama2"
 echo "   c) mistral"
 echo "   d) phi-3"
-echo "6. Run Multi-Model Assistant"
-echo "7. Run Face Recognition Agent"
-echo "8. Run Dark Web Scraper"
-echo "9. Manual Document/Text Ingestion"
-echo "10. Quit"
+echo "7. Run Multi-Model Assistant"
+echo "8. Run Face Recognition Agent"
+echo "9. Run Dark Web Scraper"
+echo "10. Manual Document/Text Ingestion"
+echo "11. Quit"
 echo ""
 
-read -p "Choose an assistant [1-10] or local LLM [a-z]: " choice
+read -p "Choose an assistant [1-11] or local LLM [a-z]: " choice
 echo ""
 
 case "$choice" in
@@ -144,16 +154,17 @@ case "$choice" in
   2) python3 Claude_assistant.py ;;
   3) python3 gemini_assistant.py ;;
   4) python3 groq_assistant.py ;;
-  5) start_ollama; python3 local_llm_assistant.py ;;
-  5a) start_ollama; python3 local_llm_assistant.py tinyllama ;;
-  5b) start_ollama; python3 local_llm_assistant.py llama2 ;;
-  5c) start_ollama; python3 local_llm_assistant.py mistral ;;
-  5d) start_ollama; python3 local_llm_assistant.py phi-3 ;;
-  6) python3 multi_ai_query.py ;;
-  7) python3 face_recognition_agent.py ;;
-  8) python3 scrapers/darkweb_scraper.py ;;
-  9) python3 utils/ingest_text_manual.py ;;
-  10) echo "[👋] Exiting. Bye!" && deactivate && exit 0 ;;
+  5) python3 venice_assistant.py ;;
+  6) start_ollama; python3 local_llm_assistant.py ;;
+  6a) start_ollama; python3 local_llm_assistant.py tinyllama ;;
+  6b) start_ollama; python3 local_llm_assistant.py llama2 ;;
+  6c) start_ollama; python3 local_llm_assistant.py mistral ;;
+  6d) start_ollama; python3 local_llm_assistant.py phi-3 ;;
+  7) python3 multi_ai_query.py ;;
+  8) python3 face_recognition_agent.py ;;
+  9) python3 scrapers/darkweb_scraper.py ;;
+  10) python3 utils/ingest_text_manual.py ;;
+  11) echo "[👋] Exiting. Bye!" && deactivate && exit 0 ;;
   *) echo "[❌] Invalid choice. Exiting." ;;
 esac
 
