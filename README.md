@@ -1,8 +1,3 @@
-Here’s your fully polished and correctly spaced `README.md` — optimized for GitHub with **copy-paste-friendly commands**, proper code formatting, and a clean flow. You can copy and paste this directly into your `README.md` file.
-
----
-
-````md
 # 🧠 SuperBrain AI – Offline, Ethical, Research-Driven AI Platform (V1.2)
 
 > A modular AI research platform combining popular cloud models with offline uncensored LLMs — encrypted, portable, and built for privacy-first users.
