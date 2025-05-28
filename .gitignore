@@ -30,3 +30,4 @@ __pycache__/
 ollama.pid
 utils/__init__.py
 utils/config.py
+.env
