@@ -16,6 +16,35 @@ Everything runs fully offline — and every answer is logged, learned, and impro
 
 ---
 
+Perfect! Here’s a polished **Download section** you can copy and paste into your `README.md` file on GitHub. It includes a button-style badge, easy instructions for beginners, and a pro command for developers.
+
+---
+
+### 📥 Download SuperBrain AI
+
+#### ✅ **Option 1: Download ZIP (No Setup Needed)**
+
+[![Download ZIP](https://img.shields.io/badge/⬇️%20Download-ZIP-blue?style=for-the-badge)](https://github.com/KatchDaVizion/SuperBrain_AI/archive/refs/heads/main.zip)
+
+1. Click the button above ☝️
+2. Unzip the folder on your computer
+3. Open it and follow the instructions in `README.md` to get started
+
+---
+
+#### 🧑‍💻 **Option 2: Clone Using Git (For Devs)**
+
+git clone https://github.com/KatchDaVizion/SuperBrain_AI.git
+cd SuperBrain_AI
+
+> 🧠 Tip: Make sure you have [Git installed](https://git-scm.com/downloads)
+
+---
+
+git clone https://github.com/KatchDaVizion/SuperBrain_AI.git && cd SuperBrain_AI && bash launch_ai_portable.sh
+
+---
+
 ## 🔍 Why Use Uncensored Local Models?
 
 Online AI tools are often:
@@ -39,9 +68,7 @@ SuperBrain is designed for **ethical research** only. Misuse contradicts its mis
 
 SuperBrain includes a unique **multi-model querying script**:
 
-```bash
 python3 multi_ai_query.py
-```
 
 🧠 Ask one question → Get responses from **GPT-4, Claude, Gemini, Groq, and Venice** side-by-side.
 
@@ -74,10 +101,8 @@ This supercharges your insight-building and allows **open research consensus dis
 
 You can download any model from [ollama.com](https://ollama.com) directly inside SuperBrain:
 
-```bash
 /download phi3
 /model 2  # switch model
-```
 
 | Model Name   | Minimum RAM Required |
 | ------------ | -------------------- |
@@ -105,17 +130,13 @@ All assistants (OpenAI, Claude, Gemini, Groq, Venice) use encrypted API key stor
 
 ### 🐧 Linux / WSL / Kali / Ubuntu:
 
-```bash
 chmod +x launch_ai_portable.sh
 ./launch_ai_portable.sh
-```
 
 ### 🍏 macOS:
 
-```bash
 chmod +x launch_macOS.sh
 ./launch_macOS.sh
-```
 
 ---
 
