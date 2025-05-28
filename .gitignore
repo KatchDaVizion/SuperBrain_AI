@@ -15,7 +15,7 @@ __pycache__/
 memory_encryption.py
 utils/memory_manager.py
 utils/memory.py
-utils/logger.py
+# utils/logger.py
 utils/ingest_text_manual.py
 utils/decrypt_memory.py
 utils/ingest_text.py
