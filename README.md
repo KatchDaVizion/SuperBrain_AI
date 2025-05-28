@@ -235,3 +235,4 @@ Includes models from [ageitgey/face\_recognition\_models](https://github.com/age
 
 **#OfflineAI #UncensoredLLM #CyberSecurity #OSINT #PrivacyTech #SuperBrainAI #RAG #DarkWebResearch #AI4Good #VeniceAI #PortableAI**
 
+⚠️ Note: SuperBrain AI is pinned to compatible LangChain versions to avoid known dependency conflicts.

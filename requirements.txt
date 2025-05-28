@@ -5,14 +5,14 @@ google-generativeai
 groq
 cryptography
 
-# === LLMs & Langchain ===
+# === LangChain & Compatible Versions ===
+langchain-core==0.1.53
 langchain-community==0.0.27
-langchain
-langchain-community
-sentence-transformers
-transformers<5.0.0
-huggingface-hub
-ollama
+langchain==0.1.14
+sentence-transformers==2.2.2
+transformers==4.36.2
+huggingface-hub==0.20.3
+ollama>=0.1.6
 
 # === Core Dependencies ===
 numpy
@@ -57,3 +57,6 @@ google-auth-httplib2
 google-api-core
 google-ai-generativelanguage
 
+📌 NOTE:
+If installation fails due to memory or dlib errors, run:
+pip install dlib --no-cache-dir --force-reinstall
