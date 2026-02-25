@@ -36,7 +36,7 @@ Everything runs fully offline — and every answer is logged, learned, and impro
 git clone https://github.com/KatchDaVizion/SuperBrain_AI.git
 cd SuperBrain_AI
 bash launch_ai_portable.sh
-````
+```
 
 ---
 

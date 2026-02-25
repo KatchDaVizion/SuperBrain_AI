@@ -31,6 +31,10 @@ utils/__init__.py
 utils/config.py
 memory_encryption.py
 
+# Secrets/keys
+*.key
+*.pem
+
 # Runtime
 ollama.pid
 resource_monitor.pid
